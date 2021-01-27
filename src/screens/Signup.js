@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "white",
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: "bold",
   },
   textInput: {

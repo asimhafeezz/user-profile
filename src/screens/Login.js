@@ -27,12 +27,15 @@ const Login = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity>
+      {/* <TouchableOpacity>
         <Text style={styles.helpText}>Forget Password ?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <View style={styles.loginButton}>
-        <Button title="Login" />
+        <Button
+          title="Login"
+          onPress={() => navigation.navigate("userprofile")}
+        />
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate("signup")}>
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "white",
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: "bold",
   },
   textInput: {

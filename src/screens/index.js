@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 //components
 import Signin from "./Login";
 import SignUp from "./Signup";
+import UserProfile from "./userProfile";
 
 function HomeScreen() {
   return (
@@ -49,6 +50,7 @@ function SignUpContainer() {
         >
           <Stack.Screen name="signin" component={Signin} />
           <Stack.Screen name="signup" component={SignUp} />
+          <Stack.Screen name="userprofile" component={UserProfile} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
