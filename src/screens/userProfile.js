@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import EditModalBox from "../components/modal";
 
 const UserProfile = ({ navigation }) => {
   const openSignUpScreen = () => {
@@ -34,7 +35,7 @@ const UserProfile = ({ navigation }) => {
         <Text style={styles.name}>Nick Name</Text>
 
         <View style={styles.button}>
-          <Button title="Edit" />
+          <EditModalBox />
         </View>
       </View>
     </>
