@@ -9,11 +9,12 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
-const EditModalBox = () => {
+const EditModalBox = ({ haveData }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [imageData, setImageData] = useState({
     filepath: {
@@ -88,25 +89,36 @@ const EditModalBox = () => {
               </TouchableHighlight>
             </View>
 
-            {imageData ? (
+            {/* {imageData.fileData && (
               <Image
                 source={{ uri: "data:image/jpeg;base64," + imageData.fileData }}
                 style={styles.userImage}
               />
-            ) : (
-              <Image
-                source={{ uri: "https://i.stack.imgur.com/DzbD0.png" }}
-                style={styles.userImage}
-              />
-            )}
+            )} */}
 
-            <TouchableOpacity onPress={chooseImage}>
-              <Text>Choose File</Text>
-            </TouchableOpacity>
+            <Button
+              onPress={chooseImage}
+              style={{ ...styles.modalText, alignSelf: "flex-start" }}
+              title="Choose File"
+            />
 
             <View style={styles.inputWrap}>
               <TextInput style={styles.textInput} placeholder="Nick Name" />
             </View>
+
+            {!haveData ? (
+              <Button
+                onPress={() => console.log("add and save")}
+                style={styles.modalText}
+                title="ADD"
+              />
+            ) : (
+              <Button
+                onPress={() => console.log("edit and save")}
+                style={styles.modalText}
+                title="SAVE"
+              />
+            )}
           </View>
         </View>
       </Modal>
@@ -122,7 +134,7 @@ const EditModalBox = () => {
           setModalVisible(!modalVisible);
         }}
       >
-        <Text style={styles.textStyle}>Edit</Text>
+        <Text style={styles.textStyle}>{haveData ? "Edit" : "ADD INFO+"}</Text>
       </TouchableHighlight>
     </View>
   );
@@ -162,8 +174,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+    padding: 10,
+    fontSize: 18,
+    backgroundColor: "white",
+    width: "100%",
+    marginBottom: 20,
   },
   userImage: {
     width: 200,

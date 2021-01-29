@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Text,
   View,
@@ -11,6 +12,8 @@ import {
 import EditModalBox from "../components/modal";
 
 const UserProfile = ({ navigation }) => {
+  //local state
+  const [haveData, setHaveData] = useState(false);
   const openSignUpScreen = () => {
     console.log("open signup screen");
   };
@@ -27,15 +30,19 @@ const UserProfile = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.heading}>User Profile</Text>
 
-        <Image
-          source={{ uri: "https://i.stack.imgur.com/DzbD0.png" }}
-          style={styles.userImage}
-        />
+        {haveData && (
+          <>
+            <Image
+              source={{ uri: "https://i.stack.imgur.com/DzbD0.png" }}
+              style={styles.userImage}
+            />
 
-        <Text style={styles.name}>Nick Name</Text>
+            <Text style={styles.name}>Nick Name</Text>
+          </>
+        )}
 
         <View style={styles.button}>
-          <EditModalBox />
+          <EditModalBox haveData={haveData} />
         </View>
       </View>
     </>
