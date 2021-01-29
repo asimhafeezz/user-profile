@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import EditModalBox from "../components/modal";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import useAuthActions from "../actions/authActions";
 
 const UserProfile = ({ navigation }) => {
@@ -25,6 +27,10 @@ const UserProfile = ({ navigation }) => {
   const logOut = () => {
     setIsAuth(false);
     navigation.navigate("signin");
+  };
+
+  const getToken = async () => {
+    return await AsyncStorage.getItem("token");
   };
 
   return (
@@ -53,6 +59,7 @@ const UserProfile = ({ navigation }) => {
         <View style={styles.button}>
           <EditModalBox haveData={haveData} />
         </View>
+        {/* <Text>{d}</Text> */}
       </View>
     </>
   );

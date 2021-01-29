@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import axios from "axios";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import useAuthActions from "../actions/authActions";
 
 const Login = ({ navigation }) => {
@@ -27,7 +29,7 @@ const Login = ({ navigation }) => {
       username: base64.encode(utf8.encode(username)),
       password: base64.encode(utf8.encode(password)),
     };
-    console.log({ userData });
+    console.log("token", base64.encode(utf8.encode(`${username}:${password}`)));
 
     setLoading(true);
 
@@ -38,12 +40,17 @@ const Login = ({ navigation }) => {
       axios
         .post("http://138.68.247.26:8010/api/login/", {
           headers: {
-            Authorization: "Basic Z3VsbDoxMjM0NTY=",
+            Authorization: `Basic ${base64.encode(
+              utf8.encode(`${username}:${password}`)
+            )}`,
           },
-          data: userData,
         })
         .then((res) => {
-          console.log({ res });
+          AsyncStorage.setItem(
+            "token",
+            base64.encode(utf8.encode(`${username}:${password}`))
+          );
+          console.log(res.data);
           setIsAuth(true);
           navigation.navigate("userprofile");
           setLoading(false);
@@ -76,6 +83,7 @@ const Login = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
+
       {err ? <Text style={styles.errText}>{err}</Text> : null}
 
       <View style={styles.loginButton}>
