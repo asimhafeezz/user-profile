@@ -27,16 +27,21 @@ const Signup = ({ navigation }) => {
       setErr("enter same passwords");
       setLoading(false);
     } else {
+      setErr("");
       const userData = {
         username,
         password: pass1,
       };
       axios
         .post("http://138.68.247.26:8010/api/signup/", userData)
-        .then((res) => {
+        .then(() => {
           navigation.navigate("signin");
+          setLoading(false);
         })
-        .catch((e) => console.log(e));
+        .catch(() => {
+          setErr("network err");
+          setLoading(false);
+        });
     }
   };
 

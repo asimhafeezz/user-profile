@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import base64 from "base-64";
+import utf8 from "utf8";
 import {
   Text,
   View,
@@ -7,35 +9,72 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
+import axios from "axios";
 
 const Login = ({ navigation }) => {
-  const openSignUpScreen = () => {
-    console.log("open signup screen");
+  //states
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onLoginButtonClick = () => {
+    const userData = {
+      username: base64.encode(utf8.encode(username)),
+      password: base64.encode(utf8.encode(password)),
+    };
+    console.log({ userData });
+
+    setLoading(true);
+
+    if (username === "" || password === "") {
+      setErr("All fields required*");
+      setLoading(false);
+    } else {
+      axios
+        .post("http://138.68.247.26:8010/api/login/", {
+          headers: {
+            Authorization: "Basic Z3VsbDoxMjM0NTY=",
+          },
+          data: userData,
+        })
+        .then((res) => {
+          console.log({ res });
+          navigation.navigate("userprofile");
+          setLoading(false);
+        })
+        .catch((e) => {
+          setErr("Network Server Err");
+          setLoading(false);
+          console.log({ e });
+        });
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Sign In</Text>
       <View style={styles.inputWrap}>
-        <TextInput style={styles.textInput} placeholder="username or email" />
+        <TextInput
+          style={styles.textInput}
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+          placeholder="username or email"
+        />
       </View>
       <View style={styles.inputWrap}>
         <TextInput
           style={styles.textInput}
           placeholder="Password"
           secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
         />
       </View>
-
-      {/* <TouchableOpacity>
-        <Text style={styles.helpText}>Forget Password ?</Text>
-      </TouchableOpacity> */}
+      <Text style={styles.errText}>{err}</Text>
 
       <View style={styles.loginButton}>
-        <Button
-          title="Login"
-          onPress={() => navigation.navigate("userprofile")}
-        />
+        <Button disabled={loading} title="Login" onPress={onLoginButtonClick} />
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate("signup")}>
@@ -74,12 +113,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   helpText: {
-    color: "lightgrey",
+    color: "white",
     marginTop: 5,
   },
   loginButton: {
     marginTop: 15,
     width: "90%",
+  },
+  errText: {
+    color: "red",
+    marginTop: 2,
   },
 });
 export default Login;
