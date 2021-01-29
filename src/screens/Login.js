@@ -11,12 +11,16 @@ import {
 } from "react-native";
 import axios from "axios";
 
+import useAuthActions from "../actions/authActions";
+
 const Login = ({ navigation }) => {
   //states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { setIsAuth } = useAuthActions();
 
   const onLoginButtonClick = () => {
     const userData = {
@@ -40,6 +44,7 @@ const Login = ({ navigation }) => {
         })
         .then((res) => {
           console.log({ res });
+          setIsAuth(true);
           navigation.navigate("userprofile");
           setLoading(false);
         })

@@ -9,36 +9,14 @@ import Signin from "./Login";
 import SignUp from "./Signup";
 import UserProfile from "./userProfile";
 
-function HomeScreen() {
-  return (
-    <SafeAreaView>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Screen</Text>
-      </View>
-    </SafeAreaView>
-  );
-}
-
-function DetailsScreen() {
-  return (
-    <SafeAreaView>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          height: 900,
-        }}
-      >
-        <Text>Details Screen</Text>
-      </View>
-    </SafeAreaView>
-  );
-}
+//redux
+import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 
-function SignUpContainer() {
+const SignUpContainer = () => {
+  //redux state
+  const isAuth = useSelector((state) => state.auth.isAuth);
   return (
     <>
       <NavigationContainer>
@@ -48,13 +26,18 @@ function SignUpContainer() {
           }}
           initialRouteName="signin"
         >
-          <Stack.Screen name="signin" component={Signin} />
-          <Stack.Screen name="signup" component={SignUp} />
-          <Stack.Screen name="userprofile" component={UserProfile} />
+          {isAuth ? (
+            <Stack.Screen name="userprofile" component={UserProfile} />
+          ) : (
+            <>
+              <Stack.Screen name="signin" component={Signin} />
+              <Stack.Screen name="signup" component={SignUp} />
+            </>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </>
   );
-}
+};
 
 export default SignUpContainer;

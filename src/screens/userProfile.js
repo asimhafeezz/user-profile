@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import EditModalBox from "../components/modal";
 
+import useAuthActions from "../actions/authActions";
+
 const UserProfile = ({ navigation }) => {
   //local state
   const [haveData, setHaveData] = useState(false);
@@ -18,11 +20,18 @@ const UserProfile = ({ navigation }) => {
     console.log("open signup screen");
   };
 
+  const { setIsAuth } = useAuthActions();
+
+  const logOut = () => {
+    setIsAuth(false);
+    navigation.navigate("signin");
+  };
+
   return (
     <>
       <View style={styles.signoutButtonOuterView}>
         <View style={styles.signoutButton}>
-          <TouchableOpacity onPress={() => navigation.navigate("signin")}>
+          <TouchableOpacity onPress={logOut}>
             <Text style={styles.helpText}>Sign Out</Text>
           </TouchableOpacity>
         </View>

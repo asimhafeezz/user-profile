@@ -1,14 +1,16 @@
 import * as types from "../actions/type";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuth: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.SET_LOGIN:
-      console.log("set login...");
-      break;
+    case types.SET_ISAUTH:
+      return {
+        ...state,
+        isAuth: action.payload,
+      };
     default:
       return state;
   }

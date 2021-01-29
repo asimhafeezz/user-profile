@@ -4,12 +4,15 @@ import { useDispatch } from "react-redux";
 const authActions = () => {
   const dispatch = useDispatch();
 
-  const login = (userData) => {
-    const { email, password } = userData;
+  const setIsAuth = (isauth) => {
+    dispatch({
+      type: types.SET_ISAUTH,
+      payload: isauth,
+    });
   };
 
   return {
-    login,
+    setIsAuth,
   };
 };
 
