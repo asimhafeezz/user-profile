@@ -84,7 +84,7 @@ const Signup = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <Text style={styles.errText}>{err}</Text>
+      {err ? <Text style={styles.errText}>{err}</Text> : null}
 
       <View style={styles.SignupButton}>
         <Button

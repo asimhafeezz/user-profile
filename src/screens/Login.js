@@ -76,7 +76,7 @@ const Login = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      <Text style={styles.errText}>{err}</Text>
+      {err ? <Text style={styles.errText}>{err}</Text> : null}
 
       <View style={styles.loginButton}>
         <Button disabled={loading} title="Login" onPress={onLoginButtonClick} />

@@ -15,7 +15,10 @@ import {
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const EditModalBox = ({ haveData }) => {
+  //local state
   const [modalVisible, setModalVisible] = useState(false);
+  const [nickname, setNickname] = useState("");
+
   const [imageData, setImageData] = useState({
     filepath: {
       data: "",
@@ -25,41 +28,60 @@ const EditModalBox = ({ haveData }) => {
     fileUri: "",
   });
 
+  const addNewInfo = () => {
+    // const photo = {
+    //   uri: imageData.filepath.uri,
+    //   type: "image/jpeg",
+    //   name: "photo.jpg"
+    // };
+    // const form = new FormData();
+    // form.append("ProfilePicture", photo);
+    // fetch(Constants.API_USER + "me/profilePicture", {
+    //   body: form,
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     Authorization: "Bearer " + user.token
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .catch(error => {
+    //     console.log("ERROR ", error);
+    //   })
+    //   .then(responseData => {
+    //     console.log("Success", responseData);
+    //   })
+  };
+
+  const editInfo = () => {
+    console.log("add new info");
+  };
+
   //select image from gallery
   const chooseImage = () => {
-    let options = {
-      title: "Select Image",
-      customButtons: [
-        { name: "customOptionKey", title: "Choose Photo from Custom Option" },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
     launchImageLibrary({ mediaType: "photo" }, (response) => {
       console.log("Response = ", response);
 
-      // if (response.didCancel) {
-      //   console.log("User cancelled image picker");
-      // } else if (response.error) {
-      //   console.log("ImagePicker Error: ", response.error);
-      // } else if (response.customButton) {
-      //   console.log("User tapped custom button: ", response.customButton);
-      //   alert(response.customButton);
-      // } else {
-      //   const source = { uri: response.uri };
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+        alert(response.customButton);
+      } else {
+        const source = { uri: response.uri };
 
-      // You can also display the image using data:
-      // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-      // alert(JSON.stringify(response));s
-      console.log("response", JSON.stringify(response));
-      // setImageData({
-      //   filePath: response,
-      //   fileData: response.data,
-      //   fileUri: response.uri,
-      // });
-      // }
+        // You can also display the image using data:
+        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        // alert(JSON.stringify(response));s
+        console.log("response", JSON.stringify(response));
+        setImageData({
+          filePath: response,
+          fileData: response.data,
+          fileUri: response.uri,
+        });
+      }
     });
   };
 
@@ -89,12 +111,12 @@ const EditModalBox = ({ haveData }) => {
               </TouchableHighlight>
             </View>
 
-            {/* {imageData.fileData && (
+            {imageData.fileUri ? (
               <Image
-                source={{ uri: "data:image/jpeg;base64," + imageData.fileData }}
+                source={{ uri: imageData.fileUri }}
                 style={styles.userImage}
               />
-            )} */}
+            ) : null}
 
             <Button
               onPress={chooseImage}
@@ -103,18 +125,23 @@ const EditModalBox = ({ haveData }) => {
             />
 
             <View style={styles.inputWrap}>
-              <TextInput style={styles.textInput} placeholder="Nick Name" />
+              <TextInput
+                style={styles.textInput}
+                value={nickname}
+                onChangeText={(text) => setNickname(text)}
+                placeholder="Enter new Nick Name"
+              />
             </View>
 
             {!haveData ? (
               <Button
-                onPress={() => console.log("add and save")}
+                onPress={addNewInfo}
                 style={styles.modalText}
                 title="ADD"
               />
             ) : (
               <Button
-                onPress={() => console.log("edit and save")}
+                onPress={editInfo}
                 style={styles.modalText}
                 title="SAVE"
               />
