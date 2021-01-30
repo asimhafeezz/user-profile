@@ -40,7 +40,7 @@ const EditModalBox = ({
     fileName: "",
   });
 
-  const addNewInfo = () => {
+  const addAndEditInfo = () => {
     //start loading
     setLoading(true);
 
@@ -187,7 +187,7 @@ const EditModalBox = ({
             {err ? <Text style={styles.errText}>{err}</Text> : null}
 
             <Button
-              onPress={addNewInfo}
+              onPress={addAndEditInfo}
               disabled={loading}
               style={styles.modalText}
               title={!haveData ? "ADD" : "EDIT"}

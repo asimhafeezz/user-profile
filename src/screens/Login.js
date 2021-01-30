@@ -67,13 +67,13 @@ const Login = ({ navigation }) => {
           style={styles.textInput}
           value={username}
           onChangeText={(text) => setUsername(text)}
-          placeholder="username or email"
+          placeholder="username"
         />
       </View>
       <View style={styles.inputWrap}>
         <TextInput
           style={styles.textInput}
-          placeholder="Password"
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}

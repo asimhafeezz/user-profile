@@ -63,7 +63,7 @@ const Signup = ({ navigation }) => {
           value={pass1}
           onChangeText={(text) => setPass1(text)}
           style={styles.textInput}
-          placeholder="Password"
+          placeholder="password"
           secureTextEntry={true}
         />
       </View>
@@ -73,7 +73,7 @@ const Signup = ({ navigation }) => {
           value={pass2}
           onChangeText={(text) => setPass2(text)}
           style={styles.textInput}
-          placeholder="Re type password"
+          placeholder="confirm password"
           secureTextEntry={true}
         />
       </View>
