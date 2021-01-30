@@ -12,12 +12,22 @@ import {
   Button,
 } from "react-native";
 
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 
-const EditModalBox = ({ haveData }) => {
+import axios from "axios";
+
+const EditModalBox = ({
+  haveData,
+  setDataChanged,
+  userData,
+  dataChanged,
+  token,
+}) => {
   //local state
   const [modalVisible, setModalVisible] = useState(false);
   const [nickname, setNickname] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [imageData, setImageData] = useState({
     filepath: {
@@ -26,31 +36,70 @@ const EditModalBox = ({ haveData }) => {
     },
     fileData: "",
     fileUri: "",
+    fileType: "",
+    fileName: "",
   });
 
   const addNewInfo = () => {
-    // const photo = {
-    //   uri: imageData.filepath.uri,
-    //   type: "image/jpeg",
-    //   name: "photo.jpg"
-    // };
-    // const form = new FormData();
-    // form.append("ProfilePicture", photo);
-    // fetch(Constants.API_USER + "me/profilePicture", {
-    //   body: form,
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "multipart/form-data",
-    //     Authorization: "Bearer " + user.token
-    //   }
-    // })
-    //   .then(response => response.json())
-    //   .catch(error => {
-    //     console.log("ERROR ", error);
-    //   })
-    //   .then(responseData => {
-    //     console.log("Success", responseData);
-    //   })
+    //start loading
+    setLoading(true);
+
+    if (nickname === "" || imageData.fileUri === "") {
+      setErr("All fields required*");
+      setLoading(false);
+    } else {
+      setErr("");
+      const fileToUpload = {
+        uri: imageData.fileUri,
+        type: imageData.fileType,
+        name: imageData.fileName,
+      };
+      //putting nickname
+      axios({
+        url: `http://138.68.247.26:8010/api/users/${userData.id}/`,
+        method: "PUT",
+        headers: {
+          Authorization: `Basic ${token}`,
+        },
+        data: { nick_name: nickname },
+      })
+        .then((res) => {
+          console.log("nickname is sent ", res.data);
+
+          //uploading profile image
+          let formdata = new FormData();
+          formdata.append("file", fileToUpload);
+          axios({
+            url: "http://138.68.247.26:8010/api/upload/",
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${token}`,
+              "Content-Type": "multipart/form-data",
+              Accept: "application/json",
+            },
+            data: formdata,
+          })
+            .then((res) => {
+              console.log("image is sent", res.data);
+              setDataChanged(!dataChanged);
+              setImageData({
+                filepath: {
+                  data: "",
+                  uri: "",
+                },
+                fileData: "",
+                fileUri: "",
+                fileType: "",
+                fileName: "",
+              });
+              setNickname("");
+              setModalVisible(false);
+            })
+            .catch((e) => console.log("image e", e))
+            .finally(() => setLoading(false));
+        })
+        .catch(() => console.log("nickname err"));
+    }
   };
 
   const editInfo = () => {
@@ -80,6 +129,8 @@ const EditModalBox = ({ haveData }) => {
           filePath: response,
           fileData: response.data,
           fileUri: response.uri,
+          fileType: response.type,
+          fileName: response.fileName,
         });
       }
     });
@@ -133,19 +184,14 @@ const EditModalBox = ({ haveData }) => {
               />
             </View>
 
-            {!haveData ? (
-              <Button
-                onPress={addNewInfo}
-                style={styles.modalText}
-                title="ADD"
-              />
-            ) : (
-              <Button
-                onPress={editInfo}
-                style={styles.modalText}
-                title="SAVE"
-              />
-            )}
+            {err ? <Text style={styles.errText}>{err}</Text> : null}
+
+            <Button
+              onPress={addNewInfo}
+              disabled={loading}
+              style={styles.modalText}
+              title={!haveData ? "ADD" : "EDIT"}
+            />
           </View>
         </View>
       </Modal>
@@ -232,6 +278,10 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignSelf: "flex-end",
+  },
+  errText: {
+    color: "red",
+    marginTop: 2,
   },
 });
 

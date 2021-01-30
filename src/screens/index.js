@@ -24,14 +24,14 @@ const SignUpContainer = () => {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName="signin"
+          initialRouteName="signin-screen"
         >
           {isAuth ? (
-            <Stack.Screen name="userprofile" component={UserProfile} />
+            <Stack.Screen name="userprofile-screen" component={UserProfile} />
           ) : (
             <>
-              <Stack.Screen name="signin" component={Signin} />
-              <Stack.Screen name="signup" component={SignUp} />
+              <Stack.Screen name="signin-screen" component={Signin} />
+              <Stack.Screen name="signup-screen" component={SignUp} />
             </>
           )}
         </Stack.Navigator>

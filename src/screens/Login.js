@@ -25,26 +25,21 @@ const Login = ({ navigation }) => {
   const { setIsAuth } = useAuthActions();
 
   const onLoginButtonClick = () => {
-    const userData = {
-      username: base64.encode(utf8.encode(username)),
-      password: base64.encode(utf8.encode(password)),
-    };
-    console.log("token", base64.encode(utf8.encode(`${username}:${password}`)));
-
     setLoading(true);
 
     if (username === "" || password === "") {
       setErr("All fields required*");
       setLoading(false);
     } else {
-      axios
-        .post("http://138.68.247.26:8010/api/login/", {
-          headers: {
-            Authorization: `Basic ${base64.encode(
-              utf8.encode(`${username}:${password}`)
-            )}`,
-          },
-        })
+      axios({
+        url: "http://138.68.247.26:8010/api/login/",
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${base64.encode(
+            utf8.encode(`${username}:${password}`)
+          )}`,
+        },
+      })
         .then((res) => {
           AsyncStorage.setItem(
             "token",
@@ -52,11 +47,12 @@ const Login = ({ navigation }) => {
           );
           console.log(res.data);
           setIsAuth(true);
-          navigation.navigate("userprofile");
+          navigation.navigate("userprofile-screen");
           setLoading(false);
+          setErr("");
         })
         .catch((e) => {
-          setErr("Network Server Err");
+          setErr("wrong username or password");
           setLoading(false);
           console.log({ e });
         });
@@ -90,7 +86,7 @@ const Login = ({ navigation }) => {
         <Button disabled={loading} title="Login" onPress={onLoginButtonClick} />
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+      <TouchableOpacity onPress={() => navigation.navigate("signup-screen")}>
         <Text style={styles.helpText}>Create new account ?</Text>
       </TouchableOpacity>
     </View>

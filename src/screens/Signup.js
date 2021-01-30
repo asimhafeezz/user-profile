@@ -35,7 +35,7 @@ const Signup = ({ navigation }) => {
       axios
         .post("http://138.68.247.26:8010/api/signup/", userData)
         .then(() => {
-          navigation.navigate("signin");
+          navigation.navigate("signin-screen");
           setLoading(false);
         })
         .catch(() => {
@@ -78,7 +78,7 @@ const Signup = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate("signin")}>
+      <TouchableOpacity onPress={() => navigation.navigate("signin-screen")}>
         <Text style={styles.helpText}>
           Already have an account ? login here
         </Text>

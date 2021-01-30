@@ -11,29 +11,64 @@ import {
 } from "react-native";
 import EditModalBox from "../components/modal";
 
+import axios from "axios";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import useAuthActions from "../actions/authActions";
+import { useEffect } from "react";
 
 const UserProfile = ({ navigation }) => {
   //local state
   const [haveData, setHaveData] = useState(false);
-  const openSignUpScreen = () => {
-    console.log("open signup screen");
-  };
+  const [userData, setUserData] = useState({
+    id: null,
+    nick_name: null,
+    profile_pic: null,
+  });
+
+  const [token, setToken] = useState("");
+  const [dataChanged, setDataChanged] = useState(false);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const { setIsAuth } = useAuthActions();
 
   const logOut = () => {
     setIsAuth(false);
-    navigation.navigate("signin");
+    AsyncStorage.removeItem("token");
+    navigation.navigate("signin-screen");
   };
 
-  const getToken = async () => {
-    return await AsyncStorage.getItem("token");
-  };
+  useEffect(() => {
+    // const unsub = ()
+    setDataLoading(true);
 
-  return (
+    AsyncStorage.getItem("token").then((userToken) => {
+      setToken(userToken);
+      axios({
+        url: "http://138.68.247.26:8010/api/login/",
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${userToken}`,
+        },
+      }).then((res) => {
+        const userdata = res.data;
+        if (userdata.profile_pic === null || userdata.nick_name === null) {
+          setHaveData(false);
+        } else {
+          setHaveData(true);
+        }
+        setUserData(userdata);
+        setDataLoading(false);
+      });
+    });
+  }, [dataChanged]);
+
+  return dataLoading ? (
+    <View style={styles.loadingView}>
+      <Text>Loading...</Text>
+    </View>
+  ) : (
     <>
       <View style={styles.signoutButtonOuterView}>
         <View style={styles.signoutButton}>
@@ -48,18 +83,23 @@ const UserProfile = ({ navigation }) => {
         {haveData && (
           <>
             <Image
-              source={{ uri: "https://i.stack.imgur.com/DzbD0.png" }}
+              source={{ uri: userData.profile_pic }}
               style={styles.userImage}
             />
 
-            <Text style={styles.name}>Nick Name</Text>
+            <Text style={styles.name}>{userData.nick_name}</Text>
           </>
         )}
 
         <View style={styles.button}>
-          <EditModalBox haveData={haveData} />
+          <EditModalBox
+            haveData={haveData}
+            userData={userData}
+            dataChanged={dataChanged}
+            token={token}
+            setDataChanged={setDataChanged}
+          />
         </View>
-        {/* <Text>{d}</Text> */}
       </View>
     </>
   );
@@ -125,6 +165,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingRight: 15,
     paddingTop: 20,
+  },
+  loadingView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 18,
+    backgroundColor: "coral",
   },
 });
 export default UserProfile;
