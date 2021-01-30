@@ -40,28 +40,30 @@ const UserProfile = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // const unsub = ()
-    setDataLoading(true);
+    const unsub = () => {
+      setDataLoading(true);
 
-    AsyncStorage.getItem("token").then((userToken) => {
-      setToken(userToken);
-      axios({
-        url: "http://138.68.247.26:8010/api/login/",
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${userToken}`,
-        },
-      }).then((res) => {
-        const userdata = res.data;
-        if (userdata.profile_pic === null || userdata.nick_name === null) {
-          setHaveData(false);
-        } else {
-          setHaveData(true);
-        }
-        setUserData(userdata);
-        setDataLoading(false);
+      AsyncStorage.getItem("token").then((userToken) => {
+        setToken(userToken);
+        axios({
+          url: "http://138.68.247.26:8010/api/login/",
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${userToken}`,
+          },
+        }).then((res) => {
+          const userdata = res.data;
+          if (userdata.profile_pic === null || userdata.nick_name === null) {
+            setHaveData(false);
+          } else {
+            setHaveData(true);
+          }
+          setUserData(userdata);
+          setDataLoading(false);
+        });
       });
-    });
+    };
+    return unsub();
   }, [dataChanged]);
 
   return dataLoading ? (
@@ -83,7 +85,9 @@ const UserProfile = ({ navigation }) => {
         {haveData && (
           <>
             <Image
-              source={{ uri: userData.profile_pic }}
+              source={{
+                uri: "http://138.68.247.26:8010" + userData.profile_pic,
+              }}
               style={styles.userImage}
             />
 

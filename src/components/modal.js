@@ -171,8 +171,12 @@ const EditModalBox = ({
 
             <Button
               onPress={chooseImage}
-              style={{ ...styles.modalText, alignSelf: "flex-start" }}
-              title="Choose File"
+              style={{
+                ...styles.modalText,
+                alignSelf: "flex-start",
+                marginBottom: 45,
+              }}
+              title="Choose Photo"
             />
 
             <View style={styles.inputWrap}>
