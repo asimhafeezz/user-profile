@@ -8,7 +8,6 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,
   Button,
 } from "react-native";
 
@@ -102,9 +101,9 @@ const EditModalBox = ({
     }
   };
 
-  const editInfo = () => {
-    console.log("add new info");
-  };
+  // const editInfo = () => {
+  //   console.log("add new info");
+  // };
 
   //select image from gallery
   const chooseImage = () => {

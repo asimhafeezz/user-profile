@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   Text,
   View,
-  TextInput,
+  ScrollView,
   StyleSheet,
   Button,
   Image,
@@ -71,7 +71,7 @@ const UserProfile = ({ navigation }) => {
       <Text>Loading...</Text>
     </View>
   ) : (
-    <>
+    <ScrollView>
       <View style={styles.signoutButtonOuterView}>
         <View style={styles.signoutButton}>
           <TouchableOpacity onPress={logOut}>
@@ -105,7 +105,7 @@ const UserProfile = ({ navigation }) => {
           />
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 };
 
